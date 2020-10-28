@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 public class CheckList {
     private JList allItemsView;
@@ -38,9 +39,10 @@ public class CheckList {
 
         selectedItemsView.addKeyListener(new MyKeyListener(this));
 
-        var items = FileWorker.readFile(filePath);
+        List<String> items = FileWorker.readFile(filePath);
         allItemsListModel = new DefaultListModel();
-        allItemsListModel.addAll(items);
+        //items.forEach(x -> allItemsListModel.addElement(x));
+        addAll(items, allItemsListModel);
 
         allItemsView.setModel(allItemsListModel);
         selectedItemsListModel = new DefaultListModel();
@@ -79,9 +81,14 @@ public class CheckList {
     }
 
     private void moveItemToRight(ActionEvent e) {
-        selectedItemsListModel.addAll(allItemsView.getSelectedValuesList());
+        addAll(allItemsView.getSelectedValuesList(), selectedItemsListModel);
+        //selectedItemsListModel.addAll(allItemsView.getSelectedValuesList());
     }
 
+    private void addAll(List source, DefaultListModel model) {
+        source.forEach(x -> model.addElement(x));
+        //selectedItemsListModel.addAll(allItemsView.getSelectedValuesList());
+    }
 
     private static class MyKeyListener implements KeyListener {
 
@@ -225,4 +232,5 @@ public class CheckList {
     public JComponent $$$getRootComponent$$$() {
         return rootPanel;
     }
+
 }
