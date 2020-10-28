@@ -122,6 +122,9 @@ public class CheckList {
                 case KeyEvent.VK_CONTROL:
                     ctrlPressed = true;
                     break;
+                case KeyEvent.VK_DELETE:
+                     parent.selectedItemsView.getSelectedValuesList().forEach(x -> parent.selectedItemsListModel.removeElement(x));
+                    break;
             }
 
             if (ctrlPressed && cPressed) {
