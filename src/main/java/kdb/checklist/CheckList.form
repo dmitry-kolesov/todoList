@@ -19,6 +19,7 @@
         <properties>
           <dividerLocation value="250"/>
           <enabled value="true"/>
+          <resizeWeight value="0.5"/>
         </properties>
         <border type="none"/>
         <children>
