@@ -4,34 +4,59 @@
     <constraints>
       <xy x="20" y="20" width="500" height="467"/>
     </constraints>
-    <properties/>
+    <properties>
+      <enabled value="false"/>
+    </properties>
     <border type="none"/>
     <children>
-      <component id="18bae" class="javax.swing.JList" binding="allItemsView">
+      <splitpane id="6fbac" binding="splitPane1">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="200"/>
           </grid>
-          <gridbag weightx="1.0" weighty="1.0"/>
+          <gridbag weightx="1.0" weighty="4.0"/>
         </constraints>
         <properties>
-          <font size="16"/>
+          <dividerLocation value="250"/>
+          <enabled value="true"/>
         </properties>
-      </component>
-      <component id="85538" class="javax.swing.JList" binding="selectedItemsView">
-        <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-          <gridbag weightx="1.0" weighty="1.0"/>
-        </constraints>
-        <properties>
-          <font size="16"/>
-        </properties>
-      </component>
+        <border type="none"/>
+        <children>
+          <scrollpane id="add6">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="18bae" class="javax.swing.JList" binding="allItemsView">
+                <constraints/>
+                <properties>
+                  <font size="16"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="5b">
+            <constraints>
+              <splitpane position="right"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="85538" class="javax.swing.JList" binding="selectedItemsView">
+                <constraints/>
+                <properties>
+                  <font size="16"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </splitpane>
       <component id="f51e5" class="javax.swing.JButton" binding="copyButton">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -41,9 +66,11 @@
       <component id="9317b" class="javax.swing.JTextPane" binding="newItemView">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="100" height="20"/>
             <preferred-size width="150" height="50"/>
+            <maximum-size width="-1" height="50"/>
           </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
           <font size="16"/>
@@ -51,8 +78,8 @@
       </component>
       <component id="b323c" class="javax.swing.JButton" binding="addNewItemBtn">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="+"/>

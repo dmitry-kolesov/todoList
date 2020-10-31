@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.Box;
+
 public class CheckList {
     private JList allItemsView;
     private JList selectedItemsView;
@@ -20,33 +22,55 @@ public class CheckList {
     private JPanel rootPanel;
     private JTextPane newItemView;
     private JButton addNewItemBtn;
+    private JSplitPane splitPane1;
     private DefaultListModel allItemsListModel;
     private DefaultListModel selectedItemsListModel;
 
-    final static String filePath = "categories.csv";
+    final static String allCategoriesFilePath = "allCategories.csv";
+    final static String selectedCategoriesFilePath = "selectedCategories.csv";
 
     public CheckList() throws IOException {
+        //$$$setupUI$$$();
+        $$$setupUI$$$();
         initComponents();
 
     }
 
     protected void initComponents() throws IOException {
         //rootPanel = new JPanel();
-        rootPanel.setSize(400, 400);
+        HtmlCellRenderer leftCellRenderer = new HtmlCellRenderer(200);
+        HtmlCellRenderer rightCellRenderer = new HtmlCellRenderer(200);
+
+        allItemsView.setCellRenderer(leftCellRenderer);
+        allItemsView.setMinimumSize(new Dimension(100, 20));
+        allItemsView.setMaximumSize(new Dimension(200, -1));
         allItemsView.setBorder(new LineBorder(Color.GRAY, 1));
+
+        selectedItemsView.setCellRenderer(rightCellRenderer);
+        selectedItemsView.setMinimumSize(new Dimension(100, 20));
+        selectedItemsView.setMaximumSize(new Dimension(200, -1));
         selectedItemsView.setBorder(new LineBorder(Color.GRAY, 1));
+        selectedItemsView.setPrototypeCellValue("1234567890");
+
+        rootPanel.setSize(600, 400);
         newItemView.setMinimumSize(new Dimension(100, 20));
+        newItemView.setMaximumSize(new Dimension(200, 20));
 
         selectedItemsView.addKeyListener(new MyKeyListener(this));
 
-        List<String> items = FileWorker.readFile(filePath);
-        allItemsListModel = new DefaultListModel();
-        //items.forEach(x -> allItemsListModel.addElement(x));
-        addAll(items, allItemsListModel);
+        // todo  в один метод
+        allItemsListModel = initializeListModelAndView(allItemsListModel, allItemsView, allCategoriesFilePath);
+//        List<String> items = FileWorker.readFile(allCategoriesFilePath);
+//        allItemsListModel = new DefaultListModel();
+//        //items.forEach(x -> allItemsListModel.addElement(x));
+//        addAll(items, allItemsListModel);
+//        allItemsView.setModel(allItemsListModel);
 
-        allItemsView.setModel(allItemsListModel);
-        selectedItemsListModel = new DefaultListModel();
-        selectedItemsView.setModel(selectedItemsListModel);
+        selectedItemsListModel = initializeListModelAndView(selectedItemsListModel, selectedItemsView, selectedCategoriesFilePath);
+//        List<String> selectedItems = FileWorker.readFile(selectedCategoriesFilePath);
+//        selectedItemsListModel = new DefaultListModel();
+//        addAll(selectedItems, selectedItemsListModel);
+//        selectedItemsView.setModel(selectedItemsListModel);
 
         copyButton.addActionListener(e -> moveItemToRight(e));
         addNewItemBtn.addActionListener(new AbstractAction() {
@@ -69,6 +93,20 @@ public class CheckList {
         );
     }
 
+    public void onClosing() throws IOException {
+
+        FileWorker.writeItemsFile(selectedCategoriesFilePath, selectedItemsListModel.elements());
+    }
+
+    public DefaultListModel initializeListModelAndView(DefaultListModel model, JList listView, String path) throws IOException {
+        List<String> items = FileWorker.readFile(path);
+        model = new DefaultListModel();
+        //items.forEach(x -> allItemsListModel.addElement(x));
+        addAll(items, model);
+        listView.setModel(model);
+        return model;
+    }
+
     public JPanel getRootPanel() {
         return rootPanel;
     }
@@ -76,7 +114,7 @@ public class CheckList {
     private void addItem(ActionEvent e) throws IOException {
         String newItemText = newItemView.getText();
         allItemsListModel.addElement(newItemText);
-        FileWorker.writeFile(filePath, newItemText);
+        FileWorker.writeFile(allCategoriesFilePath, newItemText);
         newItemView.setText("");
     }
 
@@ -88,6 +126,41 @@ public class CheckList {
     private void addAll(List source, DefaultListModel model) {
         source.forEach(x -> model.addElement(x));
         //selectedItemsListModel.addAll(allItemsView.getSelectedValuesList());
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        rootPanel = new JPanel();
+        rootPanel.setLayout(new GridBagLayout());
+
+        JScrollPane scrollPane = new JScrollPane();
+        allItemsView = new JList();
+        scrollPane.setViewportView(allItemsView);
+        allItemsView.setLayoutOrientation(JList.VERTICAL);
+        Font allItemsViewFont = this.$$$getFont$$$(null, -1, 16, allItemsView.getFont());
+        if (allItemsViewFont != null) allItemsView.setFont(allItemsViewFont);
+        //GridBagConstraints gbc;
+//        gbc = new GridBagConstraints();
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        gbc.weightx = 1.0;
+//        gbc.weighty = 1.0;
+//        gbc.fill = GridBagConstraints.BOTH;
+        rootPanel.add(scrollPane);
+
+        JScrollPane rightScrollPane = new JScrollPane();
+        selectedItemsView = new JList();
+        rightScrollPane.setViewportView(selectedItemsView);
+        selectedItemsView.setLayoutOrientation(JList.VERTICAL);
+        Font selectedItemsViewFont = this.$$$getFont$$$(null, -1, 16, selectedItemsView.getFont());
+        if (selectedItemsViewFont != null) selectedItemsView.setFont(selectedItemsViewFont);
+//        gbc = new GridBagConstraints();
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        gbc.weightx = 1.0;
+//        gbc.weighty = 1.0;
+//        gbc.fill = GridBagConstraints.BOTH;
+        rootPanel.add(rightScrollPane);
     }
 
     private static class MyKeyListener implements KeyListener {
@@ -123,7 +196,7 @@ public class CheckList {
                     ctrlPressed = true;
                     break;
                 case KeyEvent.VK_DELETE:
-                     parent.selectedItemsView.getSelectedValuesList().forEach(x -> parent.selectedItemsListModel.removeElement(x));
+                    parent.selectedItemsView.getSelectedValuesList().forEach(x -> parent.selectedItemsListModel.removeElement(x));
                     break;
             }
 
@@ -147,13 +220,6 @@ public class CheckList {
         }
     }
 
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
     /**
      * Method generated by IntelliJ IDEA GUI Designer
      * >>> IMPORTANT!! <<<
@@ -164,34 +230,37 @@ public class CheckList {
     private void $$$setupUI$$$() {
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridBagLayout());
-        allItemsView = new JList();
-        Font allItemsViewFont = this.$$$getFont$$$(null, -1, 16, allItemsView.getFont());
-        if (allItemsViewFont != null) allItemsView.setFont(allItemsViewFont);
+        rootPanel.setEnabled(false);
+        splitPane1 = new JSplitPane();
+        splitPane1.setDividerLocation(250);
+        splitPane1.setEnabled(true);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        gbc.weighty = 4.0;
         gbc.fill = GridBagConstraints.BOTH;
-        rootPanel.add(allItemsView, gbc);
+        rootPanel.add(splitPane1, gbc);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        splitPane1.setLeftComponent(scrollPane1);
+        allItemsView = new JList();
+        Font allItemsViewFont = this.$$$getFont$$$(null, -1, 16, allItemsView.getFont());
+        if (allItemsViewFont != null) allItemsView.setFont(allItemsViewFont);
+        scrollPane1.setViewportView(allItemsView);
+        final JScrollPane scrollPane2 = new JScrollPane();
+        splitPane1.setRightComponent(scrollPane2);
         selectedItemsView = new JList();
         Font selectedItemsViewFont = this.$$$getFont$$$(null, -1, 16, selectedItemsView.getFont());
         if (selectedItemsViewFont != null) selectedItemsView.setFont(selectedItemsViewFont);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        rootPanel.add(selectedItemsView, gbc);
+        scrollPane2.setViewportView(selectedItemsView);
         copyButton = new JButton();
         copyButton.setText("Copy To Right");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
         rootPanel.add(copyButton, gbc);
         newItemView = new JTextPane();
         Font newItemViewFont = this.$$$getFont$$$(null, -1, 16, newItemView.getFont());
@@ -199,6 +268,8 @@ public class CheckList {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         rootPanel.add(newItemView, gbc);
         addNewItemBtn = new JButton();
@@ -206,7 +277,8 @@ public class CheckList {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
         rootPanel.add(addNewItemBtn, gbc);
     }
 
