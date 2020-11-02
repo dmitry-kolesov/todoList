@@ -5,9 +5,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -23,8 +21,8 @@ public class CheckList {
     private JTextPane newItemView;
     private JButton addNewItemBtn;
     private JSplitPane splitPane1;
-    private DefaultListModel allItemsListModel;
-    private DefaultListModel selectedItemsListModel;
+    private DefaultListModel<String> allItemsListModel;
+    private DefaultListModel<String> selectedItemsListModel;
 
     final static String allCategoriesFilePath = "allCategories.csv";
     final static String selectedCategoriesFilePath = "selectedCategories.csv";
@@ -56,21 +54,20 @@ public class CheckList {
         newItemView.setMinimumSize(new Dimension(100, 20));
         newItemView.setMaximumSize(new Dimension(200, 20));
 
-        selectedItemsView.addKeyListener(new MyKeyListener(this));
-
         // todo  в один метод
         allItemsListModel = initializeListModelAndView(allItemsListModel, allItemsView, allCategoriesFilePath);
-//        List<String> items = FileWorker.readFile(allCategoriesFilePath);
-//        allItemsListModel = new DefaultListModel();
-//        //items.forEach(x -> allItemsListModel.addElement(x));
-//        addAll(items, allItemsListModel);
-//        allItemsView.setModel(allItemsListModel);
 
         selectedItemsListModel = initializeListModelAndView(selectedItemsListModel, selectedItemsView, selectedCategoriesFilePath);
-//        List<String> selectedItems = FileWorker.readFile(selectedCategoriesFilePath);
-//        selectedItemsListModel = new DefaultListModel();
-//        addAll(selectedItems, selectedItemsListModel);
-//        selectedItemsView.setModel(selectedItemsListModel);
+
+        EditListAction edit = new EditListAction();
+        EditListAction rightEdit = new EditListAction();
+        selectedItemsView.addKeyListener(new ListKeyListener(selectedItemsView, selectedItemsListModel, rightEdit));
+        allItemsView.addKeyListener(new ListKeyListener(allItemsView, allItemsListModel, edit));
+
+        MouseAction mouseAction = new MouseAction(selectedItemsView, rightEdit);
+        selectedItemsView.addMouseListener(mouseAction);
+        MouseAction allItemsMouseAction = new MouseAction(allItemsView, edit);
+        allItemsView.addMouseListener(allItemsMouseAction);
 
         copyButton.addActionListener(e -> moveItemToRight(e));
         addNewItemBtn.addActionListener(new AbstractAction() {
@@ -96,6 +93,7 @@ public class CheckList {
     public void onClosing() throws IOException {
 
         FileWorker.writeItemsFile(selectedCategoriesFilePath, selectedItemsListModel.elements());
+        FileWorker.writeItemsFile(allCategoriesFilePath, allItemsListModel.elements());
     }
 
     public DefaultListModel initializeListModelAndView(DefaultListModel model, JList listView, String path) throws IOException {
@@ -163,62 +161,6 @@ public class CheckList {
         rootPanel.add(rightScrollPane);
     }
 
-    private static class MyKeyListener implements KeyListener {
-
-
-        boolean ctrlPressed = false;
-        boolean cPressed = false;
-        CheckList parent;
-
-        public MyKeyListener(CheckList parent) {
-            super();
-            this.parent = parent;
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_C:
-                    cPressed = true;
-
-                    break;
-                case KeyEvent.VK_CONTROL:
-                    ctrlPressed = true;
-                    break;
-                case KeyEvent.VK_DELETE:
-                    parent.selectedItemsView.getSelectedValuesList().forEach(x -> parent.selectedItemsListModel.removeElement(x));
-                    break;
-            }
-
-            if (ctrlPressed && cPressed) {
-//                System.out.println("Blocked CTRl+C");
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                StringBuilder result = new StringBuilder();
-                Enumeration<String> enumeration = parent.selectedItemsListModel.elements();
-                while (enumeration.hasMoreElements()) {
-                    result.append(enumeration.nextElement() + System.lineSeparator());
-                }
-
-//                StringBuilder b = new StringBuilder();
-//                Collections.list(parent.selectedItemsListModel.elements()).forEach(o -> {b.append(o+ System.lineSeparator());});
-                //Collections.list(parent.selectedItemsListModel.elements());
-
-                StringSelection stringSelection = new StringSelection(result.toString());
-                clipboard.setContents(stringSelection, null);
-                e.consume();// Stop the event from propagating.
-            }
-        }
-    }
 
     /**
      * Method generated by IntelliJ IDEA GUI Designer
@@ -234,6 +176,7 @@ public class CheckList {
         splitPane1 = new JSplitPane();
         splitPane1.setDividerLocation(250);
         splitPane1.setEnabled(true);
+        splitPane1.setResizeWeight(0.5);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

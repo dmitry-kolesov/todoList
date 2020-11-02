@@ -1,6 +1,10 @@
 package kdb.checklist;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -35,8 +39,9 @@ public class FileWorker {
         writer.close();
     }
 
-    public static void writeItemsFile(String path, Enumeration elements) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
+    public static void writeItemsFile(String textpath, Enumeration elements) throws IOException {
+        Path path = Paths.get(textpath);
+        BufferedWriter writer = Files.newBufferedWriter(path , StandardOpenOption.TRUNCATE_EXISTING);//new BufferedWriter(new FileWriter(path, false));
         while (elements.hasMoreElements()) {
             String newItem = (String) elements.nextElement();
             //items.forEach(newItem -> {
