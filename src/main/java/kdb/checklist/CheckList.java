@@ -198,12 +198,16 @@ public class CheckList {
         if (selectedItemsViewFont != null) selectedItemsView.setFont(selectedItemsViewFont);
         scrollPane2.setViewportView(selectedItemsView);
         copyButton = new JButton();
-        copyButton.setText("Copy To Right");
+        Font copyButtonFont = this.$$$getFont$$$(null, -1, 16, copyButton.getFont());
+        if (copyButtonFont != null) copyButton.setFont(copyButtonFont);
+        copyButton.setText("Перенести в правую часть");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
+        gbc.weighty = 0.4;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.VERTICAL;
         rootPanel.add(copyButton, gbc);
         newItemView = new JTextPane();
         Font newItemViewFont = this.$$$getFont$$$(null, -1, 16, newItemView.getFont());
@@ -216,12 +220,16 @@ public class CheckList {
         gbc.fill = GridBagConstraints.BOTH;
         rootPanel.add(newItemView, gbc);
         addNewItemBtn = new JButton();
-        addNewItemBtn.setText("+");
+        Font addNewItemBtnFont = this.$$$getFont$$$(null, -1, 16, addNewItemBtn.getFont());
+        if (addNewItemBtnFont != null) addNewItemBtn.setFont(addNewItemBtnFont);
+        addNewItemBtn.setText("Добавить");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.weightx = 1.0;
+        gbc.weighty = 0.4;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.VERTICAL;
         rootPanel.add(addNewItemBtn, gbc);
     }
 

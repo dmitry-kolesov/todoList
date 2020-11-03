@@ -57,11 +57,14 @@
       </splitpane>
       <component id="f51e5" class="javax.swing.JButton" binding="copyButton">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="1.0" weighty="0.0"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="150" height="50"/>
+          </grid>
+          <gridbag weightx="1.0" weighty="0.4"/>
         </constraints>
         <properties>
-          <text value="Copy To Right"/>
+          <font size="16"/>
+          <text value="Перенести в правую часть"/>
         </properties>
       </component>
       <component id="9317b" class="javax.swing.JTextPane" binding="newItemView">
@@ -79,11 +82,12 @@
       </component>
       <component id="b323c" class="javax.swing.JButton" binding="addNewItemBtn">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="1.0" weighty="0.0"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.4"/>
         </constraints>
         <properties>
-          <text value="+"/>
+          <font size="16"/>
+          <text value="Добавить"/>
         </properties>
       </component>
     </children>

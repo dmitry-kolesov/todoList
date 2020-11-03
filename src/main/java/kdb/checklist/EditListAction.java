@@ -3,46 +3,44 @@ package kdb.checklist;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.PopupMenuEvent;
 
-public class EditListAction extends AbstractAction
-{
+public class EditListAction extends AbstractAction {
     private JPopupMenu editPopup;
     private JTextField editTextField;
     private Class<?> modelClass;
-    private Boolean isActionStarted = false;
+    //private Boolean isActionStarted = false;
 
-    public EditListAction()
-    {
+    public EditListAction() {
         setModelClass(DefaultListModel.class);
     }
 
-    public Boolean getIsActionStarted(){
-        return isActionStarted;
+    public Boolean getIsActionStarted() {
+        return editPopup != null && editPopup.isVisible();
+        //return isActionStarted;
     }
 
-    protected void setModelClass(Class modelClass)
-    {
+    protected void setModelClass(Class modelClass) {
         this.modelClass = modelClass;
     }
 
-    protected void applyValueToModel(String value, ListModel model, int row)
-    {
-        DefaultListModel dlm = (DefaultListModel)model;
+    protected void applyValueToModel(String value, ListModel model, int row) {
+        DefaultListModel dlm = (DefaultListModel) model;
         dlm.set(row, value);
     }
 
     /*
      *	Display the popup editor when requested
      */
-    public void actionPerformed(ActionEvent e)
-    {
-        JList list = (JList)e.getSource();
+    public void actionPerformed(ActionEvent e) {
+        JList list = (JList) e.getSource();
         ListModel model = list.getModel();
 
-        if (! modelClass.isAssignableFrom(model.getClass())) return;
+        if (!modelClass.isAssignableFrom(model.getClass())) return;
 
         //  Do a lazy creation of the popup editor
 
@@ -59,7 +57,7 @@ public class EditListAction extends AbstractAction
 
         //  Prepare the text field for editing
 
-        editTextField.setText( list.getSelectedValue().toString() );
+        editTextField.setText(list.getSelectedValue().toString());
         editTextField.selectAll();
         editTextField.requestFocusInWindow();
     }
@@ -67,42 +65,53 @@ public class EditListAction extends AbstractAction
     /*
      *  Create the popup editor
      */
-    private void createEditPopup(JList list)
-    {
+    private void createEditPopup(JList list) {
         //  Use a text field as the editor
 
         editTextField = new JTextField();
         Border border = UIManager.getBorder("List.focusCellHighlightBorder");
-        editTextField.setBorder( border );
+        editTextField.setBorder(border);
 
         //  Add an Action to the text field to save the new value to the model
 
-        editTextField.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        editTextField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 String value = editTextField.getText();
                 ListModel model = list.getModel();
                 int row = list.getSelectedIndex();
                 applyValueToModel(value, model, row);
                 editPopup.setVisible(false);
-                isActionStarted = false;
+                //isActionStarted = false;
             }
         });
 
         //  Add the editor to the popup
 
         editPopup = new JPopupMenu();
-        editPopup.setBorder( new EmptyBorder(0, 0, 0, 0) );
+        editPopup.setBorder(new EmptyBorder(0, 0, 0, 0));
         editPopup.add(editTextField);
+//        editPopup.addPopupMenuListener(new PopupMenuListener() {
+//            @Override
+//            public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+//                isActionStarted = false;
+//            }
+//
+//            @Override
+//            public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+//                isActionStarted = false;
+//            }
+//
+//            @Override
+//            public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+//            }
+//        });
     }
 
-    public void activateAction(Object actionKey, JList list){
+    public void activateAction(Object actionKey, JList list) {
         Action action = list.getActionMap().get(actionKey);
 
-        if (action != null)
-        {
-            isActionStarted = true;
+        if (action != null) {
+            //isActionStarted = true;
             ActionEvent event = new ActionEvent(
                     list,
                     ActionEvent.ACTION_PERFORMED,

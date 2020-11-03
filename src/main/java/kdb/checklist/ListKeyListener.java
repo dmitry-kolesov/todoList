@@ -34,18 +34,18 @@ public class ListKeyListener implements java.awt.event.KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
 
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-//            case KeyEvent.VK_ENTER:
-//                if (this.action != null && !action.getIsActionStarted()) {
-//                    action.activateAction(ENTER, listView);
-//                }
-//                break;
+            case KeyEvent.VK_ENTER:
+                if (this.action != null && !action.getIsActionStarted()) {
+                    action.activateAction(ENTER, listView);
+                }
+                break;
             case KeyEvent.VK_C:
                 cPressed = true;
 
