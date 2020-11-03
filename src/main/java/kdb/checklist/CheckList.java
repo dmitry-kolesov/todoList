@@ -41,12 +41,12 @@ public class CheckList {
 
         allItemsView.setCellRenderer(leftCellRenderer);
         allItemsView.setMinimumSize(new Dimension(100, 20));
-        allItemsView.setMaximumSize(new Dimension(200, -1));
+        allItemsView.setMaximumSize(new Dimension(-1, 50));
         allItemsView.setBorder(new LineBorder(Color.GRAY, 1));
 
         selectedItemsView.setCellRenderer(rightCellRenderer);
         selectedItemsView.setMinimumSize(new Dimension(100, 20));
-        selectedItemsView.setMaximumSize(new Dimension(200, -1));
+        selectedItemsView.setMaximumSize(new Dimension(-1, 50));
         selectedItemsView.setBorder(new LineBorder(Color.GRAY, 1));
         selectedItemsView.setPrototypeCellValue("1234567890");
 

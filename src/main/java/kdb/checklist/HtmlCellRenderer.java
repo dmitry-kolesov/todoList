@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HtmlCellRenderer extends DefaultListCellRenderer {
-    public static final String HTML_1 = "<html><body style='width: %d px; min-width: %d px; max-height:50px; vertical-align:top;'>";
+    public static final String HTML_1 = "<html><body style='width: %s; min-width: %d px; height:%s; max-height:50px; vertical-align:top;'>";
     //public static final String HTML_2 = "px'>";
     public static final String HTML_3 = "</body></html>";
     private int width;
@@ -16,7 +16,7 @@ public class HtmlCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
                                                   int index, boolean isSelected, boolean cellHasFocus) {
-        String text = String.format(HTML_1 ,width,width) + value.toString()
+        String text = String.format(HTML_1 , "100%", width, "100%") + value.toString()
                 + HTML_3;
 //        if(isSelected){
 //            setBackground(Color.YELLOW);
