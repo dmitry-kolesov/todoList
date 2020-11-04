@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 public class FileWorker {
     public static List<String> readFile(String path) throws IOException {

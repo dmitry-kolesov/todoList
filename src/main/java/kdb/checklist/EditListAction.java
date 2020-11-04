@@ -3,17 +3,14 @@ package kdb.checklist;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.PopupMenuEvent;
 
 public class EditListAction extends AbstractAction {
     private JPopupMenu editPopup;
     private JTextField editTextField;
     private Class<?> modelClass;
-    //private Boolean isActionStarted = false;
 
     public EditListAction() {
         setModelClass(DefaultListModel.class);
@@ -21,7 +18,6 @@ public class EditListAction extends AbstractAction {
 
     public Boolean getIsActionStarted() {
         return editPopup != null && editPopup.isVisible();
-        //return isActionStarted;
     }
 
     protected void setModelClass(Class modelClass) {
@@ -90,21 +86,6 @@ public class EditListAction extends AbstractAction {
         editPopup = new JPopupMenu();
         editPopup.setBorder(new EmptyBorder(0, 0, 0, 0));
         editPopup.add(editTextField);
-//        editPopup.addPopupMenuListener(new PopupMenuListener() {
-//            @Override
-//            public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
-//                isActionStarted = false;
-//            }
-//
-//            @Override
-//            public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
-//                isActionStarted = false;
-//            }
-//
-//            @Override
-//            public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
-//            }
-//        });
     }
 
     public void activateAction(Object actionKey, JList list) {
