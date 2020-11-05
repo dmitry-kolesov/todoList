@@ -5,7 +5,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class CheckList {
@@ -16,6 +18,7 @@ public class CheckList {
     private JTextPane newItemView;
     private JButton addNewItemBtn;
     private JSplitPane splitPane1;
+    private JCheckBox isSeparateByReturnCheckBox;
     private DefaultListModel<String> allItemsListModel;
     private DefaultListModel<String> selectedItemsListModel;
 
@@ -106,8 +109,16 @@ public class CheckList {
 
     private void addItem(ActionEvent e) throws IOException {
         String newItemText = newItemView.getText();
-        allItemsListModel.addElement(newItemText);
-        FileWorker.writeFile(allCategoriesFilePath, newItemText);
+        if (!isSeparateByReturnCheckBox.isSelected()) {
+            allItemsListModel.addElement(newItemText);
+            FileWorker.writeFile(allCategoriesFilePath, newItemText);
+        } else {
+            List<String> spliitedList = Arrays.asList(newItemText.split(System.lineSeparator()));
+            Enumeration splitted = Collections.enumeration(spliitedList);
+
+            spliitedList.forEach(x -> allItemsListModel.addElement(x));
+            FileWorker.writeItemsFile(allCategoriesFilePath, splitted, false);
+        }
         newItemView.setText("");
     }
 
@@ -138,27 +149,24 @@ public class CheckList {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 4.0;
         gbc.fill = GridBagConstraints.BOTH;
         rootPanel.add(splitPane1, gbc);
         final JScrollPane scrollPane1 = new JScrollPane();
         splitPane1.setLeftComponent(scrollPane1);
-
         allItemsView = new JList();
         allItemsView.setEnabled(true);
         Font allItemsViewFont = this.$$$getFont$$$(null, -1, 16, allItemsView.getFont());
         if (allItemsViewFont != null) allItemsView.setFont(allItemsViewFont);
         scrollPane1.setViewportView(allItemsView);
-
         final JScrollPane scrollPane2 = new JScrollPane();
         splitPane1.setRightComponent(scrollPane2);
-
         selectedItemsView = new JList();
         Font selectedItemsViewFont = this.$$$getFont$$$(null, -1, 16, selectedItemsView.getFont());
         if (selectedItemsViewFont != null) selectedItemsView.setFont(selectedItemsViewFont);
         scrollPane2.setViewportView(selectedItemsView);
-
         copyButton = new JButton();
         Font copyButtonFont = this.$$$getFont$$$(null, -1, 16, copyButton.getFont());
         if (copyButtonFont != null) copyButton.setFont(copyButtonFont);
@@ -166,6 +174,7 @@ public class CheckList {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 0.4;
         gbc.anchor = GridBagConstraints.WEST;
@@ -177,6 +186,7 @@ public class CheckList {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -193,6 +203,13 @@ public class CheckList {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.VERTICAL;
         rootPanel.add(addNewItemBtn, gbc);
+        isSeparateByReturnCheckBox = new JCheckBox();
+        isSeparateByReturnCheckBox.setText("разделять строки по вводу?");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        rootPanel.add(isSeparateByReturnCheckBox, gbc);
     }
 
     /**

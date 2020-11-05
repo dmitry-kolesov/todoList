@@ -39,12 +39,23 @@ public class FileWorker {
     }
 
     public static void writeItemsFile(String textpath, Enumeration elements) throws IOException {
-        Path path = Paths.get(textpath);
-        BufferedWriter writer = Files.newBufferedWriter(path , StandardOpenOption.TRUNCATE_EXISTING);//new BufferedWriter(new FileWriter(path, false));
+        writeItemsFile(textpath, elements, true);
+    }
+
+    public static void writeItemsFile(String textpath, Enumeration elements, Boolean isRewrite) throws IOException {
+        BufferedWriter writer;
+        if(isRewrite) {
+            Path path = Paths.get(textpath);
+            writer = Files.newBufferedWriter(path, StandardOpenOption.TRUNCATE_EXISTING);//new BufferedWriter(new FileWriter(path, false));
+        }
+        else{
+            writer = new BufferedWriter(new FileWriter(textpath, false));
+        }
+
         while (elements.hasMoreElements()) {
             String newItem = (String) elements.nextElement();
             //items.forEach(newItem -> {
-            newItem = newItem.replace(System.lineSeparator(), " ").replace("\r", " ").replace("\n", " ");
+            newItem = newItem.replace(System.lineSeparator(), " ").replace("\n", " ");
             try {
                 writer.append(newItem + System.lineSeparator());
             } catch (IOException e) {
